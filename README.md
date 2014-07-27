@@ -1,4 +1,4 @@
-phpBB-iTickets
+phpBB-iTickets v0.0.2
 ==============
 
 Тикеты для форума phpBB3
