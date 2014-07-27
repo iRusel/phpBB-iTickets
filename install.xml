@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.phpbb.com/mods/xml/modx-1.2.6.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator by tumba25 (online version)"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="ru"><![CDATA[iTickets - Система тикетов.]]></title>
+		<description lang="ru"><![CDATA[Добавляет возможность создания тикетов на форуме.]]></description>
+		<author-notes lang="ru"><![CDATA[Skype irusel-am]]></author-notes>
+		<author-group>
+			<author>
+				<realname><![CDATA[Руслан]]></realname>
+				<username phpbbcom="no"><![CDATA[iRusel]]></username>
+				<homepage><![CDATA[http://www.irusel.com]]></homepage>
+				<email><![CDATA[irusel@yandex.ru]]></email>
+			</author>
+		</author-group>
+		<mod-version>0.0.2</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>300</time>
+			<target-version>3.0.12</target-version>
+		</installation>
+		<history>
+			<entry>
+				<date>2014-07-10</date>
+				<rev-version>0.0.2</rev-version>
+				<changelog lang="ru">
+					<change><![CDATA[Добавлена кнопка "Новый тикет" вместо обычного текста.]]></change>
+					<change><![CDATA[При создании\закрытии\ответе в тикет автору тикета будет приходить письмо на e-mail.]]></change>
+				</changelog>
+			</entry>
+		</history>
+	</header>
+	<action-group>
+		<sql><![CDATA[CREATE TABLE IF NOT EXISTS `phpbb_itickets` (
+  `ticket_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `author_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `ticket_name` varchar(50) NOT NULL,
+  `ticket_small` varchar(60) NOT NULL DEFAULT '-',
+  `ticket_text` text NOT NULL,
+  `answers` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `user_status` mediumint(8) unsigned NOT NULL DEFAULT '1',
+  `admin_status` mediumint(8) unsigned NOT NULL DEFAULT '2',
+  `bbcode_bitfield` varchar(255) NOT NULL,
+  `bbcode_uid` varchar(8) NOT NULL,
+  `time` int(11) NOT NULL DEFAULT '0',
+  `last_answer` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ticket_id`),
+  UNIQUE KEY `ticket_id` (`ticket_id`),
+  KEY `ticket_id_2` (`ticket_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;]]></sql>
+		<sql><![CDATA[CREATE TABLE IF NOT EXISTS `phpbb_itickets_comments` (
+  `comment_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `ticket_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `author_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `uip` varchar(40) NOT NULL DEFAULT '0',
+  `ticket_author` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `text` text NOT NULL,
+  `time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`comment_id`),
+  UNIQUE KEY `comment_id` (`comment_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;]]></sql>
+		<sql><![CDATA[INSERT INTO `phpbb_itickets` (`ticket_id`, `author_id`, `ticket_name`, `ticket_small`, `ticket_text`, `answers`, `user_status`, `admin_status`, `bbcode_bitfield`, `bbcode_uid`, `time`, `last_answer`) VALUES
+(1, 2, 'Пример тикета', 'краткое описание', 'Тег &lt;b&gt;&lt;/b&gt; больше не работает.\nЧто делать?', 1, 1, 2, '', '', 1404513056, 1404513066);]]></sql>
+		<sql><![CDATA[INSERT INTO `phpbb_itickets_comments` (`comment_id`, `ticket_id`, `author_id`, `uip`, `ticket_author`, `text`, `time`) VALUES
+(1, 1, 2, '127.0.0.1', 1, 'Пример комментария.', 1404513066);]]></sql>
+		<copy>
+			<file from="tickets.php" to="root/tickets.php"/>
+			<file from="language/ru/mods/itickets.php" to="root/language/ru/mods/itickets.php"/>
+			<file from="language/ru/email/itickets_close.txt" to="root/language/ru/email/itickets_close.txt"/>
+			<file from="language/ru/email/itickets_nt.txt" to="root/language/ru/email/itickets_nt.txt"/>
+			<file from="language/ru/email/itickets_nc.txt" to="root/language/ru/email/itickets_nc.txt"/>
+			<file from="styles/prosilver/template/tickets_body.html" to="root/styles/prosilver/template/tickets_body.html"/>
+			<file from="styles/prosilver/imageset/ru/button_ticket_new.gif" to="root/styles/prosilver/imageset/ru/button_ticket_new.gif"/>
+		</copy>
+		<open src="includes\acp\acp_styles.php">
+			<edit>
+				<find><![CDATA['button_pm_reply', 'button_topic_locked',]]></find>
+				<find><![CDATA['button_topic_locked']]></find>
+				<action type="after-add"><![CDATA[, 'button_ticket_new']]></action>
+			</edit>
+		</open>
+		<open src="language\ru\acp\styles.php">
+			<edit>
+				<find><![CDATA['IMG_BUTTON_TOPIC_NEW'		=> 'Новая тема',]]></find>
+				<action type="after-add"><![CDATA['IMG_BUTTON_TICKET_NEW'		=> 'Новый тикет',]]></action>
+			</edit>
+		</open>
+		<open src="styles\prosilver\imageset\ru\imageset.cfg">
+			<edit>
+				<find><![CDATA[img_button_topic_new = button_topic_new.gif*25*112]]></find>
+				<action type="after-add"><![CDATA[img_button_ticket_new = button_ticket_new.gif*25*100]]></action>
+			</edit>
+		</open>
+		<open src="styles\prosilver\theme\buttons.css">
+			<edit>
+				<find><![CDATA[.buttons div.reply-icon	]]></find>
+				<action type="after-add"><![CDATA[.buttons div.newticket-icon	{ width: {IMG_BUTTON_TICKET_NEW_WIDTH}px; height: {IMG_BUTTON_TICKET_NEW_HEIGHT}px; }]]></action>
+			</edit>
+		</open>
+		<open src="styles\prosilver\theme\colours.css">
+			<edit>
+				<find><![CDATA[.reply-icon span	{ background-image: url("{IMG_BUTTON_TOPIC_REPLY_SRC}"); }]]></find>
+				<action type="after-add"><![CDATA[.newticket-icon span	{ background-image: url("{IMG_BUTTON_TICKET_NEW_SRC}"); }]]></action>
+			</edit>
+		</open>
+		<open src="includes/constants.php">
+			<edit>
+				<find><![CDATA[// Additional tables]]></find>
+				<action type="after-add"><![CDATA[define('ITICKETS_TABLE',			$table_prefix . 'itickets');
+define('ITICKETS_TABLE_COMMENTS',	$table_prefix . 'itickets_comments');]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="ru"><![CDATA[Добавить SQL, загрузить все файлы, почистить кэш и можно использовать.
+Чтобы зайти в тикеты введите:
+http://site.ru/forum/tickets.php]]></diy-instructions>
+	</action-group>
+</mod>

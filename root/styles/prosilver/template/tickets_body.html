@@ -1,0 +1,198 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF S_USER_LOGGED_IN and not S_IS_BOT and S_ACTION == '' or S_ACTION == 'view' -->
+  <!-- IF S_ACTION == '' -->
+  <div class="topic-actions">
+    <div class="buttons">
+      <div class="newticket-icon"><a href="{S_CREATE_TICKET}" title="{L_TICKETS_CREATE}"><span></span>{L_TICKETS_CREATE}</a></div>
+    </div>
+  </div>
+  <!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF S_ACTION == '' && S_USER_TICKETS == 0 -->  
+  <div class="forumbg">
+    <div class="inner"><span class="corners-top"><span></span></span>
+    <ul class="topiclist">
+      <li class="header">
+        <dl>
+          <dt>{L_TICKETS_TITLE}</dt>
+          <dd class="views">{L_TICKETS_STATUS}</dd>
+          <dd class="views">{L_TICKETS_AUTHOR}</dd>
+          <dd class="views">{L_TICKETS_ANSWERS}</dd>
+          <dd class="lastpost">{L_TICKETS_TIME}</dd>
+        </dl>
+      </li>
+    </ul>  
+    <!-- IF .tickets -->
+    <!-- BEGIN tickets -->     
+    <ul class="topiclist topics">
+      <li class="row bg1">      
+        <dl>
+          <dt title="{tickets.SMALLT}"><a href="{tickets.U_MORE}" class="topictitle">[ID {tickets.TID}] {tickets.TITLE}</a>
+            <br /><i><b>{L_TICKETS_SMALLT}</b> {tickets.SMALLT}</i></dt>
+          <dd class="posts"><!-- IF tickets.STATUS == 1 -->{L_TICKETS_S1}<!-- ELSEIF tickets.STATUS == 2 -->{L_TICKETS_S2}<!-- ELSEIF tickets.STATUS == 3 -->{L_TICKETS_S3}<!-- ELSEIF tickets.STATUS == 4 -->{L_TICKETS_S4}<!-- ENDIF --></dd>
+          <dd class="views">{tickets.AUTHOR}</dd>
+          <dd class="views">{tickets.ANSWERS}</dd>
+          <dd class="lastpost"><span>{tickets.TIME}</span></dd>
+        </dl>
+      </li>     
+    </ul>    
+    <!-- END tickets -->    
+  <!-- ELSE -->
+  <ul class="topiclist topics">
+      <li class="row bg1">      
+        <dl>
+          {L_TICKETS_NO_TICKETS}<br/>
+        </dl>
+      </li>     
+  </ul> 
+  <!-- ENDIF -->
+      <span class="corners-bottom"><span></span></span>    
+    </div>
+  </div>
+  <ul class="linklist">
+      <li class="rightside pagination">{TOTAL_TICKETS} <span>{PAGINATION}</span><br/>{PAGE_NUMBER}</li>
+  </ul>
+<!-- ELSEIF S_ACTION == '' && S_USER_TICKETS == 1 -->
+  <div class="forumbg">
+      <div class="inner"><span class="corners-top"><span></span></span>
+      <ul class="topiclist">
+        <li class="header">
+          <dl>
+            <dt>{L_TICKETS_TITLE}</dt>
+            <dd class="views">{L_TICKETS_STATUS}</dd>
+            <dd class="views">{L_TICKETS_ANSWERS}</dd>
+            <dd class="lastpost">{L_TICKETS_TIME}</dd>
+          </dl>
+        </li>
+      </ul>  
+      <!-- IF .tickets -->
+      <!-- BEGIN tickets -->     
+      <ul class="topiclist topics">
+        <li class="row bg1">      
+          <dl>
+            <dt title="{tickets.SMALLT}"><a href="{tickets.U_MORE}" class="topictitle">[ID {tickets.TID}] {tickets.TITLE}</a>
+              <br /><i><b>{L_TICKETS_SMALLT}</b> {tickets.SMALLT}</i></dt>
+            <dd class="posts"><!-- IF tickets.STATUS == 1 -->{L_TICKETS_S1}<!-- ELSEIF tickets.STATUS == 2 -->{L_TICKETS_S2}<!-- ELSEIF tickets.STATUS == 3 -->{L_TICKETS_S3}<!-- ELSEIF tickets.STATUS == 4 -->{L_TICKETS_S4}<!-- ENDIF --></dd>
+            <dd class="views">{tickets.ANSWERS}</dd>
+            <dd class="lastpost"><span>{tickets.TIME}</span></dd>
+          </dl>
+        </li>     
+      </ul>    
+      <!-- END tickets -->
+    <!-- ELSE -->
+    <ul class="topiclist topics">
+        <li class="row bg1">      
+          <dl>
+            {L_TICKETS_NO_TICKETS}<br/>
+          </dl>
+        </li>     
+    </ul> 
+    <!-- ENDIF -->
+        <span class="corners-bottom"><span></span></span>    
+      </div>
+    </div>
+    <ul class="linklist">
+        <li class="rightside pagination">{TOTAL_TICKETS} <span>{PAGINATION}</span><br/>{PAGE_NUMBER}</li>
+    </ul>
+<!-- ELSEIF S_ACTION == 'view' -->
+<div class="clear"></div>
+<div class="post bg2">
+<div class="inner"><span class="corners-top"><span></span></span>
+    <div class="postbody">      
+        <ul class="profile-icons">
+          <li class="delete-icon"><a href="{S_CLOSE_TICKET}" title="{L_TICKETS_CLOSE}"><span>{L_TICKETS_CLOSE}</span></a></li>
+        </ul>
+        <h3 class="first"><a href="">{T_TITLE}</a></h3>
+        <p class="author"><strong>{T_AUTHOR}</strong> &raquo; {T_TIME} </p>
+
+        <div class="content">
+          <strong>{L_TICKETS_SML}:</strong><br/>{T_SMTEXT}<br/><br/>
+          <strong>{L_TICKETS_FULL}:</strong><br/>{T_FULLT}
+        </div> 
+    </div>    
+        <dl class="postprofile">
+          <dt><strong>{L_TICKETS_NUMBER}:</strong> {T_ID}</dt>
+          <!-- IF S_USER_TICKETS == 0 -->
+          <dt><strong>{L_TICKETS_AUTHOR}:</strong> {T_AUTHOR}</dt>
+          <!-- ENDIF -->
+          <dt><strong>{L_TICKETS_TIME}:</strong> {T_TIME}</dt>
+          <dt><strong>{L_TICKETS_LASTT}:</strong> {T_L_TIME}</dt>
+          <dt><strong>{L_TICKETS_ANSWERS}:</strong> {T_ANSWERS}</dt>
+          <dt><strong>{L_TICKETS_STATUS}:</strong> <!-- IF T_STATUS == 1 -->{L_TICKETS_S1}<!-- ELSEIF T_STATUS == 2 -->{L_TICKETS_S2}<!-- ELSEIF T_STATUS == 3 -->{L_TICKETS_S_CLOSE}<!-- ELSEIF T_STATUS == 4 -->{L_TICKETS_S_CLOSE}<!-- ENDIF --></dt>   
+      </dl>      
+      <span class="corners-bottom"><span></span></span></div>
+  </div>
+<!-- BEGIN comments -->
+<div class="clear"></div>
+  <div class="post <!-- IF comments.CI_AUTHOR == 1 -->bg1<!-- ELSEIF comments.CI_AUTHOR == 0 -->bg3<!-- ENDIF -->">      
+  <div class="inner"><span class="corners-top"><span></span></span>
+    <div class="postbody">
+      <div class="content">          
+          {comments.TEXT}         
+      </div>
+      <div class="signature">
+        <!-- IF comments.CI_AUTHOR != 1 -->{L_TICKETS_SPS}<!-- ELSE -->IP: {comments.UIP}<!-- ENDIF -->
+      </div>
+    </div>
+    <dl class="postprofile">
+      <dt>{comments.TIME}</dt>
+      <dt>{L_TICKETS_ANSW} {comments.AUTHOR}</dt>
+   </dl>
+    <span class="corners-bottom"><span></span></span></div>
+  </div>
+<!-- END comments -->  
+<ul class="linklist">
+  <li class="rightside pagination">{TOTAL_COMMENTS} <span>{PAGINATION}</span><br/>{PAGE_NUMBER}</li>
+</ul>
+<!-- IF S_CLOSED_TICKET == 0 -->
+<form id="postform" method="post" action="{U_ACTION}"{S_FORM_ENCTYPE}>
+  <div class="content panel bg0">
+    <div class="inner"><span class="corners-top"><span></span></span>
+    <!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+      <fieldset>        
+        <dl>
+          <textarea name="t_comment" id="t_comment" rows="5" cols="75" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox"></textarea>
+        </dl>
+      </fieldset>
+  </div>
+  <div align="center">
+    <input type="submit" name="submit" value="{L_TICKETS_OTV}" accesskey="s" />
+      {S_HIDDEN_FIELDS_CONFIRM}
+      {S_FORM_TOKEN}
+  <span class="corners-bottom"><span></span></span></div>
+</form>
+<!-- ENDIF -->
+<!-- ELSEIF S_ACTION == 'create' -->
+<form id="postform" method="post" action="{U_ACTION}"{S_FORM_ENCTYPE}>
+  <div class="content panel bg0">
+    <div class="inner"><span class="corners-top"><span></span></span>
+    <!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+      <fieldset>        
+        <!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+          <fieldset>
+            <dl>
+              <dt><label for="ticket_name">{L_TRACKER_TICKET_TITLE}:</label></dt>
+              <dd><input type="text" id="ticket_name" name="ticket_name" maxlength="50" value="{TICKET_NAME}" placeholder="{L_TICKETS_CREATE_NAME}" class="inputbox medium" /></dd>
+            </dl>
+
+            <dl>
+              <dt><label for="ticket_small">{L_TICKETS_SML}:</label></dt>
+              <dd><input type="text" id="ticket_small" name="ticket_small" maxlength="60" value="{TICKET_SMALL}" placeholder="{L_TICKETS_CREATE_SM}" class="inputbox medium" /></dd>
+            </dl>          
+
+            <dl>
+              <textarea name="ticket_message" id="ticket_message" rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox" placeholder="{L_TICKETS_CREATE_TEXT}">{TICKET_TEXT}</textarea>
+            </dl>
+      </fieldset>
+  </div>
+  <div align="center">
+    <input type="submit" name="submit" value="{L_TICKETS_CREATE_1}" accesskey="s" />
+      {S_HIDDEN_FIELDS_CONFIRM}
+      {S_FORM_TOKEN}
+  <span class="corners-bottom"><span></span></span></div>
+</form>
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->
