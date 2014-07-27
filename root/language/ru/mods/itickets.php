@@ -63,6 +63,7 @@ $lang = array_merge($lang, array(
 		'TICKETS_OTV'				=>	'Ответить',
 		'TICKETS_SENDERS'			=>	'Ответ отправлен',
 		'TICKETS_LASTT'				=>	'Последний ответ',
+		'TICKETS_AUTH'				=>	'Авторизация',
 		)
 	);
 ?>

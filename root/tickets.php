@@ -39,7 +39,7 @@ switch ($action)
             {             
                 redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
             }          
-            login_box('', 'LOGIN');
+            login_box('', $user->lang['TICKETS_AUTH']);
         }
 
         if($user->data['group_id'] != 5)
