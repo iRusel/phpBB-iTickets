@@ -92,7 +92,7 @@
 		<open src="styles\prosilver\imageset\ru\imageset.cfg">
 			<edit>
 				<find><![CDATA[img_button_topic_new = button_topic_new.gif*25*112]]></find>
-				<action type="after-add"><![CDATA[img_button_ticket_new = button_ticket_new.gif*25*100]]></action>
+				<action type="after-add"><![CDATA[img_button_ticket_new = button_ticket_new.gif*25*96]]></action>
 			</edit>
 		</open>
 		<open src="styles\prosilver\theme\buttons.css">
