@@ -3,7 +3,7 @@
 *
 * @package iTickets
 * @author iRusel www.irusel.com
-* @version 0.0.2
+* @version 0.0.3
 * @copyright (c) 2014 iRusel www.irusel.com
 *
 */
@@ -64,6 +64,7 @@ $lang = array_merge($lang, array(
 		'TICKETS_SENDERS'			=>	'Ответ отправлен',
 		'TICKETS_LASTT'				=>	'Последний ответ',
 		'TICKETS_AUTH'				=>	'Авторизация',
+		'TICKETS_DISABLE'			=>	'В данный момент Тикеты отключены.',
 		)
 	);
 ?>

@@ -3,7 +3,7 @@
 *
 * @package iTickets
 * @author iRusel www.irusel.com
-* @version 0.0.2
+* @version 0.0.3
 * @copyright (c) 2014 iRusel www.irusel.com
 *
 */
@@ -27,20 +27,28 @@ $tid = request_var('tid', 0);
 $sql_where = '';
 $result = ''; 
 
+if (!$config['itickets_enable'])
+{
+  meta_refresh(5, append_sid("{$phpbb_root_path}index.$phpEx"));
+  trigger_error($user->lang['TICKETS_DISABLE']);
+}
+
+if (!$user->data['is_registered'])
+{
+  if ($user->data['is_bot'])
+  {             
+    redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+  }          
+  login_box('', $user->lang['TICKETS_AUTH']);
+}
+
+$num_t = $config['itickets_num_tp'];
+
 switch ($action) 
 {
   case '':
   {
-        $pagination_url = append_sid("{$phpbb_root_path}tickets.{$phpEx}");
-
-        if (!$user->data['is_registered'])
-        {
-            if ($user->data['is_bot'])
-            {             
-                redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
-            }          
-            login_box('', $user->lang['TICKETS_AUTH']);
-        }
+        $pagination_url = append_sid("{$phpbb_root_path}tickets.{$phpEx}");        
 
         if($user->data['group_id'] != 5)
         {
@@ -52,7 +60,7 @@ switch ($action)
                   ORDER BY a.admin_status ASC, a.time ASC';        
         }
 
-        $result = $db->sql_query_limit($sql, 15, $start);
+        $result = $db->sql_query_limit($sql, $num_t, $start);
         while ($row = $db->sql_fetchrow($result))
         {
             $row['ticket_text'] = trim_text($row['ticket_text'], $row['bbcode_uid'], $config['blog_max_chars'], $config['blog_max_par'], array(' ', "\n"), '...', $row['bbcode_bitfield'], true);
@@ -96,8 +104,8 @@ switch ($action)
         $db->sql_freeresult($result);
 
         $template->assign_vars(array(
-          'PAGINATION'     => generate_pagination($pagination_url, $total_tickets, 15, $start),
-          'PAGE_NUMBER'    => on_page($total_tickets, 15, $start),
+          'PAGINATION'     => generate_pagination($pagination_url, $total_tickets, $num_t, $start),
+          'PAGE_NUMBER'    => on_page($total_tickets, $num_t, $start),
           'TOTAL_TICKETS' => ($total_tickets == 1) ? $user->lang['TICKETS_LIST_ARTICLE'] : sprintf($user->lang['TICKETS_LIST_ARTICLES'], $total_tickets),
         ));
         break;

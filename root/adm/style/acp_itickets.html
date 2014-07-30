@@ -1,0 +1,29 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_ITICKETS_INDEX_TITLE}</h1>
+
+<p>{L_ACP_ITICKETS_INDEX_TITLE_EXPLAIN}</p>
+
+<form method="post" action="{U_ACTION}">
+	<fieldset>
+		<legend>{L_ACP_ITICKETS_INDEX_TITLE}</legend>
+		<dl>
+			<dt><label for="it_enable">{L_ACP_ITICKETS_ENABLE}:</label><br /><span>{L_ACP_ITICKETS_ENABLE_EXPLAIN}</span></dt>
+			<dd>
+				<label><input type="radio" name="it_enable" value="1" <!-- IF IT_ENABLE -->checked="checked"<!-- ENDIF --> class="radio" /> {L_YES}</label>
+				<label><input type="radio" name="it_enable" value="0" <!-- IF not IT_ENABLE -->checked="checked"<!-- ENDIF --> class="radio" /> {L_NO}</label>
+			</dd>
+		</dl>	
+		<dl>
+			<dt><label for="it_numtp">{L_ACP_ITICKETS_NUM_TP}:</label><br /><span>{L_ACP_ITICKETS_NUM_TP_EXPLAIN}</span></dt>
+			<dd><label><input type="text" name="it_numtp" value="{IT_NUM_TP}" /></label></dd>
+		</dl>		
+	</fieldset>
+
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+	</p>
+	{S_FORM_TOKEN}
+</div>
+
+<!-- INCLUDE overall_footer.html -->

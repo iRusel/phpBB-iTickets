@@ -8,7 +8,8 @@
 		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
 		<title lang="ru"><![CDATA[iTickets - Система тикетов.]]></title>
 		<description lang="ru"><![CDATA[Добавляет возможность создания тикетов на форуме.]]></description>
-		<author-notes lang="ru"><![CDATA[Skype irusel-am]]></author-notes>
+		<author-notes lang="ru"><![CDATA[Skype: irusel-am]]></author-notes>
+		<github><![CDATA[https://github.com/iRusel/phpBB-iTickets]]></github>
 		<author-group>
 			<author>
 				<realname><![CDATA[Руслан]]></realname>
@@ -17,7 +18,7 @@
 				<email><![CDATA[irusel@yandex.ru]]></email>
 			</author>
 		</author-group>
-		<mod-version>0.0.2</mod-version>
+		<mod-version>0.0.3</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
@@ -30,6 +31,16 @@
 				<changelog lang="ru">
 					<change><![CDATA[Добавлена кнопка "Новый тикет" вместо обычного текста.]]></change>
 					<change><![CDATA[При создании\закрытии\ответе в тикет автору тикета будет приходить письмо на e-mail.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>204-07-30</date>
+				<rev-version>0.0.3</rev-version>
+				<changelog lang="ru">
+					<change><![CDATA[Добавлен администраторский модуль.]]></change>
+					<change><![CDATA[Добавлена возможность включать\выключать тикеты.]]></change>
+					<change><![CDATA[Добавлена возможность настраивать кол-во отображаемых тикетов на странице.]]></change>
+					<change><![CDATA[Мелкие правки кода.]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -67,6 +78,8 @@
 (1, 2, 'Пример тикета', 'краткое описание', 'Тег &lt;b&gt;&lt;/b&gt; больше не работает.\nЧто делать?', 1, 1, 2, '', '', 1404513056, 1404513066);]]></sql>
 		<sql><![CDATA[INSERT INTO `phpbb_itickets_comments` (`comment_id`, `ticket_id`, `author_id`, `uip`, `ticket_author`, `text`, `time`) VALUES
 (1, 1, 2, '127.0.0.1', 1, 'Пример комментария.', 1404513066);]]></sql>
+		<sql><![CDATA[INSERT INTO `phpbb_config`(`config_name`, `config_value`, `is_dynamic`) VALUES ('itickets_enable','0','0');]]></sql>
+		<sql><![CDATA[INSERT INTO `phpbb_config`(`config_name`, `config_value`, `is_dynamic`) VALUES ('itickets_num_tp','15','0');]]></sql>
 		<copy>
 			<file from="tickets.php" to="root/tickets.php"/>
 			<file from="language/ru/mods/itickets.php" to="root/language/ru/mods/itickets.php"/>
@@ -75,6 +88,10 @@
 			<file from="language/ru/email/itickets_nc.txt" to="root/language/ru/email/itickets_nc.txt"/>
 			<file from="styles/prosilver/template/tickets_body.html" to="root/styles/prosilver/template/tickets_body.html"/>
 			<file from="styles/prosilver/imageset/ru/button_ticket_new.gif" to="root/styles/prosilver/imageset/ru/button_ticket_new.gif"/>
+			<file from="adm/style/acp_itickets.html" to="root/adm/style/acp_itickets.html"/>
+			<file from="includes/acp/acp_itickets.php" to="root/includes/acp/acp_itickets.php"/>
+			<file from="includes/acp/info/acp_itickets.php" to="root/includes/acp/info/acp_itickets.php"/>
+			<file from="language/ru/mods/info_acp_itickets.php" to="root/language/ru/mods/info_acp_itickets.php"/>
 		</copy>
 		<open src="includes\acp\acp_styles.php">
 			<edit>
@@ -114,8 +131,38 @@
 define('ITICKETS_TABLE_COMMENTS',	$table_prefix . 'itickets_comments');]]></action>
 			</edit>
 		</open>
-		<diy-instructions lang="ru"><![CDATA[Добавить SQL, загрузить все файлы, почистить кэш и можно использовать.
+		<open src="includes/functions.php">
+			<edit>
+				<find><![CDATA['U_FAQ' => append_sid("{$phpbb_root_path}faq.$phpEx"),]]></find>
+				<action type="after-add"><![CDATA['U_TICKETS' => append_sid("{$phpbb_root_path}tickets.$phpEx"),]]></action>
+			</edit>
+		</open>
+		<open src="language/ru/common.php">
+			<edit>
+				<find><![CDATA['FAQ_EXPLAIN' => 'Часто задаваемые вопросы',]]></find>
+				<action type="after-add"><![CDATA['TICKETS_EXPLAIN' => 'Тикеты',]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/overal_header.html">
+			<edit>
+				<find><![CDATA[<li class="icon-faq"><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}">{L_FAQ}</a></li>]]></find>
+				<action type="before-add"><![CDATA[<!-- IF S_USER_LOGGED_IN --><li class="icon-ucp"><a href="{U_TICKETS}" title="{L_TICKETS_EXPLAIN}">{L_TICKETS_EXPLAIN}</a></li><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="ru"><![CDATA[Добавить SQL, загрузить все файлы, почистить кэш.
 Чтобы зайти в тикеты введите:
-http://site.ru/forum/tickets.php]]></diy-instructions>
+http://site.ru/forum/tickets.php
+
+Для добавление админ модуля перейдите в ACP - Система - Управление модулями - Администраторски раздел - Модули;
+
+Создайте модуль "Категорию".
+В созданную категорию добавьте новый модуль.
+Введите имя "Тикеты" и нажмите создать модуль;
+Выберите тип модуля - Модуль,
+Модуль включён - Да,
+Отображения модуля - Да,
+Выбор модуля - Тикеты (acp_itickets)
+
+Отправить.]]></diy-instructions>
 	</action-group>
 </mod>
