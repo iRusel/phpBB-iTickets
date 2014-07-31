@@ -24,6 +24,7 @@ $user->setup('mods/itickets');
 $action = request_var('action', '');
 $start = request_var('start', 0);
 $tid = request_var('tid', 0);
+$r_uid = request_var('uid',0);
 $sql_where = '';
 $result = ''; 
 
@@ -43,6 +44,7 @@ if (!$user->data['is_registered'])
 }
 
 $num_t = $config['itickets_num_tp'];
+$num_c = $config['itickets_num_cp'];
 
 switch ($action) 
 {
@@ -186,7 +188,7 @@ switch ($action)
             $messenger->assign_vars(array(
               'USERNAME'      => htmlspecialchars_decode($user->data['username']),
               'T_ID'          => $tid,
-              'T_LINK'        => generate_board_url() . "/tickets.$phpEx?action=view&tid=$tid",              
+              'T_LINK'        => generate_board_url() . "/tickets.$phpEx?action=view&tid=$tid",                
             ));
             $messenger->send(NOTIFY_EMAIL);
             //
@@ -202,7 +204,7 @@ switch ($action)
         $row['ticket_text'] = generate_text_for_display($row['ticket_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $row['bbcode_options']);
 
         if($row['user_status'] == 3 || $row['user_status'] == 4 || $row['admin_status'] == 3 || $row['admin_status'] == 4) $close = 1;
-
+        $uid = $row['author_id'];
         $template->assign_vars(array(
           'T_ID'                       => $tid,
           'S_USER_TICKETS'             => ($user->data['group_id'] == 5) ? (0):(1),
@@ -214,12 +216,13 @@ switch ($action)
           'T_TITLE'                    => $row['ticket_name'],
           'T_SMTEXT'                   => $row['ticket_small'],
           'T_FULLT'                    => $row['ticket_text'],
+          'U_AT'                       => generate_board_url() . "/tickets.$phpEx?action=search&uid=$uid",  
         ));
         $db->sql_freeresult($result);
 
         $sql = 'SELECT comment_id, ticket_id, a.author_id, ticket_author, text, time, uip, u.username, u.user_colour FROM '. ITICKETS_TABLE_COMMENTS .' a
           LEFT JOIN '. USERS_TABLE .' u ON u.user_id = a.author_id WHERE ticket_id = '.$tid.' ORDER BY time DESC';
-        $resultes = $db->sql_query_limit($sql, 5, $start);
+        $resultes = $db->sql_query_limit($sql, $num_c, $start);
 
         while($rowes = $db->sql_fetchrow($resultes))
         {
@@ -242,8 +245,8 @@ switch ($action)
         $db->sql_freeresult($result);
 
         $template->assign_vars(array(
-          'PAGINATION'        => generate_pagination($pagination_url, $total_comments, 5, $start),
-          'PAGE_NUMBER'       => on_page($total_comments, 5, $start),
+          'PAGINATION'        => generate_pagination($pagination_url, $total_comments, $num_c, $start),
+          'PAGE_NUMBER'       => on_page($total_comments, $num_c, $start),
           'TOTAL_COMMENTS'    => ($total_comments == 1) ? $user->lang['TICKETS_LIST_COMMENT'] : sprintf($user->lang['TICKETS_LIST_COMMENTS'], $total_comments),
         ));
 
@@ -376,6 +379,52 @@ switch ($action)
         $message = $user->lang['TICKETS_CLOSED'] . '<br /><br />' . sprintf($user->lang['TICKETS_VIEW'], '<a href="' . $phpbb_root_path.'tickets.'.$phpEx.'?action=view&amp;tid='.$tid . '">', '</a>');
         trigger_error($message);
         break;
+    }
+    case 'search':
+    {
+      if ($r_uid)
+      {        
+        $sql_where = "WHERE author_id = ".$r_uid;
+        $sql = 'SELECT a.ticket_id, a.author_id, a.ticket_name, a.ticket_small, a.ticket_text, a.answers, a.user_status, a.admin_status, a.bbcode_bitfield, a.bbcode_uid, a.time, u.username, u.user_colour FROM ' . ITICKETS_TABLE . ' a LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = a.author_id ' .$sql_where. '
+                  ORDER BY a.admin_status ASC, a.time ASC';  
+        
+        $result = $db->sql_query_limit($sql, $num_t, $start);
+        while ($row = $db->sql_fetchrow($result))
+        {
+            $row['ticket_text'] = trim_text($row['ticket_text'], $row['bbcode_uid'], $config['blog_max_chars'], $config['blog_max_par'], array(' ', "\n"), '...', $row['bbcode_bitfield'], true);
+            $row['bbcode_options'] = 7;
+            $row['ticket_text'] = generate_text_for_display($row['ticket_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $row['bbcode_options']);
+
+            $template->assign_block_vars('tickets', array(
+            'TID'             => $row['ticket_id'],
+            'AUTHOR'          => ($user->data['group_id'] == 5) ? (get_username_string('full', $row['author_id'], $row['username'], $row['user_colour'])):(0),  
+            'TITLE'           => $row['ticket_name'],
+            'SMALLT'          => $row['ticket_small'],
+            'TEXT'            => $row['ticket_text'],
+            'TIME'            => $user->format_date($row['time']),
+            'ANSWERS'         => $row['answers'],
+            'STATUS'          => ($user->data['group_id'] == 5) ? ($row['admin_status']):($row['user_status']),
+            'U_MORE'          => append_sid("{$phpbb_root_path}tickets.{$phpEx}", 'action=view&amp;tid='.$row['ticket_id']),
+          ));  
+        }
+        $db->sql_freeresult($result);
+
+        $template->assign_vars(array(
+          'S_USER_TICKETS'           => ($user->data['group_id'] == 5) ? (0):(1),          
+        ));
+        $page_title = $user->lang['TICKETS_TICKETS'];
+
+        $template->assign_block_vars('navlinks', array(
+          'FORUM_NAME'    => $user->lang['TICKETS_TICKETS'],
+          'U_VIEW_FORUM'  => append_sid("{$phpbb_root_path}tickets.{$phpEx}"),
+        ));
+
+        $template->assign_block_vars('navlinks', array(
+          'FORUM_NAME'    => $user->lang['TICKETS_SEARCH'],
+          'U_VIEW_FORUM'  => append_sid("{$phpbb_root_path}tickets.{$phpEx}"),
+        ));
+      }
+      break;
     }
     default: redirect(append_sid("{$phpbb_root_path}tickets.$phpEx"));
 }

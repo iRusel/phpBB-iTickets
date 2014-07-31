@@ -18,7 +18,7 @@
 				<email><![CDATA[irusel@yandex.ru]]></email>
 			</author>
 		</author-group>
-		<mod-version>0.0.3</mod-version>
+		<mod-version>0.0.4</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
@@ -34,13 +34,22 @@
 				</changelog>
 			</entry>
 			<entry>
-				<date>204-07-30</date>
+				<date>2014-07-30</date>
 				<rev-version>0.0.3</rev-version>
 				<changelog lang="ru">
 					<change><![CDATA[Добавлен администраторский модуль.]]></change>
 					<change><![CDATA[Добавлена возможность включать\выключать тикеты.]]></change>
 					<change><![CDATA[Добавлена возможность настраивать кол-во отображаемых тикетов на странице.]]></change>
 					<change><![CDATA[Мелкие правки кода.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2014-07-31</date>
+				<rev-version>0.0.4</rev-version>
+				<changelog lang="ru">
+					<change><![CDATA[Настройка количества комментариев на страницу через ACP.]]></change>
+					<change><![CDATA[Исправлены страницы для комментариев.]]></change>
+					<change><![CDATA[Поиск всех тикетов от определенного пользователя.]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -80,6 +89,7 @@
 (1, 1, 2, '127.0.0.1', 1, 'Пример комментария.', 1404513066);]]></sql>
 		<sql><![CDATA[INSERT INTO `phpbb_config`(`config_name`, `config_value`, `is_dynamic`) VALUES ('itickets_enable','0','0');]]></sql>
 		<sql><![CDATA[INSERT INTO `phpbb_config`(`config_name`, `config_value`, `is_dynamic`) VALUES ('itickets_num_tp','15','0');]]></sql>
+		<sql><![CDATA[INSERT INTO `phpbb_config`(`config_name`, `config_value`, `is_dynamic`) VALUES ('itickets_num_cp','5','0')]]></sql>
 		<copy>
 			<file from="tickets.php" to="root/tickets.php"/>
 			<file from="language/ru/mods/itickets.php" to="root/language/ru/mods/itickets.php"/>
