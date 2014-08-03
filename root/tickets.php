@@ -120,9 +120,12 @@ switch ($action)
         }
 
         if($user->data['group_id'] != 5)
-        {
-            $sql = 'SELECT author_id, ticket_name, ticket_small, ticket_text, answers, user_status, bbcode_bitfield, bbcode_uid, time, last_answer FROM ' . ITICKETS_TABLE . '                 
-                WHERE author_id = '.$user->data['user_id'].' ORDER BY time DESC';
+        {            
+          $sql = 'SELECT a.author_id, a.ticket_name, a.ticket_small, a.ticket_text, a.answers, a.user_status, a.bbcode_bitfield, a.bbcode_uid, a.time, a.last_answer, u.username, u.user_colour
+              FROM ' . ITICKETS_TABLE . ' a
+                LEFT JOIN ' . USERS_TABLE . ' u
+                  ON u.user_id = a.author_id                
+                WHERE a.ticket_id = ' . $tid;
         }
         else if($user->data['group_id'] == 5)
         {
@@ -136,7 +139,7 @@ switch ($action)
         $result = $db->sql_query($sql);
         $row = $db->sql_fetchrow($result);
 
-        if($user->data['user_id'] != $row['author_id'] && ($user->data['group_id'] != 5))
+        if($user->data['user_id'] != $row['author_id'] && $user->data['group_id'] != 5)
         {
           trigger_error('TICKETS_NO_ACCESS');
         }       
@@ -208,7 +211,7 @@ switch ($action)
         $template->assign_vars(array(
           'T_ID'                       => $tid,
           'S_USER_TICKETS'             => ($user->data['group_id'] == 5) ? (0):(1),
-          'T_AUTHOR'                   => ($user->data['group_id'] == 5) ? (get_username_string('full', $row['author_id'], $row['username'], $row['user_colour'])):(0),
+          'T_AUTHOR'                   => get_username_string('full', $row['author_id'], $row['username'], $row['user_colour']),
           'T_TIME'                     => $user->format_date($row['time']),
           'T_L_TIME'                   => $user->format_date($row['last_answer']),
           'T_ANSWERS'                  => $row['answers'],
@@ -216,7 +219,7 @@ switch ($action)
           'T_TITLE'                    => $row['ticket_name'],
           'T_SMTEXT'                   => $row['ticket_small'],
           'T_FULLT'                    => $row['ticket_text'],
-          'U_AT'                       => generate_board_url() . "/tickets.$phpEx?action=search&uid=$uid",  
+          'U_AT'                       => generate_board_url() . "/tickets.$phpEx?action=search&uid=$uid",            
         ));
         $db->sql_freeresult($result);
 
@@ -357,6 +360,7 @@ switch ($action)
         $sql_ary = (array(              
           'user_status'     => ($user->data['group_id'] == 5) ? (4):(3),
           'admin_status'    => ($user->data['group_id'] == 5) ? (4):(3),
+          'close_by'        => $user->data['user_id'],
         ));
         $sql = 'UPDATE ' . ITICKETS_TABLE .' SET ' .$db->sql_build_array('UPDATE', $sql_ary).' WHERE ticket_id = ' . $tid;
         $db->sql_query($sql);

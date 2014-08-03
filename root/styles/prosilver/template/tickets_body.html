@@ -102,7 +102,7 @@
 <div class="inner"><span class="corners-top"><span></span></span>
     <div class="postbody">      
         <ul class="profile-icons">
-          <li class="delete-icon"><a href="{S_CLOSE_TICKET}" title="{L_TICKETS_CLOSE}"><span>{L_TICKETS_CLOSE}</span></a></li>
+          <!-- IF S_CLOSED_TICKET == 0 --><li class="delete-icon"><a href="{S_CLOSE_TICKET}" title="{L_TICKETS_CLOSE}"><span>{L_TICKETS_CLOSE}</span></a></li><!-- ENDIF -->
         </ul>
         <h3 class="first"><a href="">{T_TITLE}</a></h3>
         <p class="author"><strong>{T_AUTHOR}</strong> &raquo; {T_TIME} </p>
@@ -118,7 +118,7 @@
           <dt><strong>{L_TICKETS_TIME}:</strong> {T_TIME}</dt>
           <dt><strong>{L_TICKETS_LASTT}:</strong> {T_L_TIME}</dt>
           <dt><strong>{L_TICKETS_ANSWERS}:</strong> {T_ANSWERS}</dt>
-          <dt><strong>{L_TICKETS_STATUS}:</strong> <!-- IF T_STATUS == 1 -->{L_TICKETS_S1}<!-- ELSEIF T_STATUS == 2 -->{L_TICKETS_S2}<!-- ELSEIF T_STATUS == 3 -->{L_TICKETS_S_CLOSE}<!-- ELSEIF T_STATUS == 4 -->{L_TICKETS_S_CLOSE}<!-- ENDIF --></dt>   
+          <dt><strong>{L_TICKETS_STATUS}:</strong> <!-- IF T_STATUS == 1 -->{L_TICKETS_S1}<!-- ELSEIF T_STATUS == 2 -->{L_TICKETS_S2}<!-- ELSEIF T_STATUS == 3 or T_STATUS == 4 -->{L_TICKETS_S_CLOSE}<!-- ENDIF --></dt>   
           <!-- IF S_USER_TICKETS == 0 --><dt><strong><a href="{U_AT}">{L_TICKETS_FIND_AT}</a></strong></dt><!-- ENDIF -->
       </dl>      
       <span class="corners-bottom"><span></span></span></div>

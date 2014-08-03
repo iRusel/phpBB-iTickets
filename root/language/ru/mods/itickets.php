@@ -65,6 +65,8 @@ $lang = array_merge($lang, array(
 		'TICKETS_LASTT'				=>	'Последний ответ',
 		'TICKETS_AUTH'				=>	'Авторизация',
 		'TICKETS_DISABLE'			=>	'В данный момент Тикеты отключены.',
+		'TICKETS_FIND_AT'			=> 	'Найти все тикеты автора',
+		'TICKETS_SEARCH'			=>	'Поиск',
 		)
 	);
 ?>

@@ -18,7 +18,7 @@
 				<email><![CDATA[irusel@yandex.ru]]></email>
 			</author>
 		</author-group>
-		<mod-version>0.0.4</mod-version>
+		<mod-version>0.0.5</mod-version>
 		<installation>
 			<level>easy</level>
 			<time>300</time>
@@ -50,6 +50,17 @@
 					<change><![CDATA[Настройка количества комментариев на страницу через ACP.]]></change>
 					<change><![CDATA[Исправлены страницы для комментариев.]]></change>
 					<change><![CDATA[Поиск всех тикетов от определенного пользователя.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2014-08-03</date>
+				<rev-version>0.0.5</rev-version>
+				<changelog lang="ru">
+					<change><![CDATA[Релиз версия.]]></change>
+					<change><![CDATA[Исправлены баги в шаблоне.]]></change>
+				</changelog>
+				<changelog lang="en">
+					<change><![CDATA[Небольшое изменение с viewonline.php]]></change>
 				</changelog>
 			</entry>
 		</history>
@@ -134,6 +145,18 @@
 				<action type="after-add"><![CDATA[.newticket-icon span	{ background-image: url("{IMG_BUTTON_TICKET_NEW_SRC}"); }]]></action>
 			</edit>
 		</open>
+		<open src="viewonline.php">
+			<edit>
+				<find><![CDATA[case 'report':
+			$location = $user->lang['REPORTING_POST'];
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;]]></find>
+				<action type="after-add"><![CDATA[case 'tickets':
+			$location = $user->lang['TICKETS_VIEW'];
+			$location_url = append_sid("{$phpbb_root_path}tickets.$phpEx");
+		break;]]></action>
+			</edit>
+		</open>
 		<open src="includes/constants.php">
 			<edit>
 				<find><![CDATA[// Additional tables]]></find>
@@ -151,6 +174,24 @@ define('ITICKETS_TABLE_COMMENTS',	$table_prefix . 'itickets_comments');]]></acti
 			<edit>
 				<find><![CDATA['FAQ_EXPLAIN' => 'Часто задаваемые вопросы',]]></find>
 				<action type="after-add"><![CDATA['TICKETS_EXPLAIN' => 'Тикеты',]]></action>
+			</edit>
+		</open>
+		<open src="language/ru/common.php">
+			<edit>
+				<find><![CDATA['REPORTING_POST'			=> 'Размещение жалобы на сообщение',]]></find>
+				<action type="after-add"><![CDATA['TICKETS_VIEW'				=> 'Просмотр тикетов',]]></action>
+			</edit>
+		</open>
+		<open src="language/ru/common.php">
+			<edit>
+				<find><![CDATA['FAQ_EXPLAIN' => 'Часто задаваемые вопросы',]]></find>
+				<action type="after-add"><![CDATA['TICKETS_EXPLAIN' => 'Тикеты',]]></action>
+			</edit>
+		</open>
+		<open src="language/ru/common.php">
+			<edit>
+				<find><![CDATA['REPORTING_POST'			=> 'Размещение жалобы на сообщение',]]></find>
+				<action type="after-add"><![CDATA['TICKETS_VIEW'				=> 'Просмотр тикетов',]]></action>
 			</edit>
 		</open>
 		<open src="styles/prosilver/template/overal_header.html">
