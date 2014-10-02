@@ -3,7 +3,7 @@
 *
 * @package iTickets
 * @author iRusel www.irusel.com
-* @version 0.0.3
+* @version 0.0.5
 * @copyright (c) 2014 iRusel www.irusel.com
 *
 */
@@ -65,7 +65,7 @@ switch ($action)
         $result = $db->sql_query_limit($sql, $num_t, $start);
         while ($row = $db->sql_fetchrow($result))
         {
-            $row['ticket_text'] = trim_text($row['ticket_text'], $row['bbcode_uid'], $config['blog_max_chars'], $config['blog_max_par'], array(' ', "\n"), '...', $row['bbcode_bitfield'], true);
+            $row['ticket_text'] = trim_text($row['ticket_text'], $row['bbcode_uid'], 1000, 10, array(' ', "\n"), '...', $row['bbcode_bitfield'], true);
             $row['bbcode_options'] = 7;
             $row['ticket_text'] = generate_text_for_display($row['ticket_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $row['bbcode_options']);
 
@@ -181,7 +181,6 @@ switch ($action)
             }
             $db->sql_query($sql);
 
-            //
             include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
             $messenger = new messenger(false);
             $messenger->template('itickets_nc', $user->data['user_lang']);
@@ -194,7 +193,6 @@ switch ($action)
               'T_LINK'        => generate_board_url() . "/tickets.$phpEx?action=view&tid=$tid",                
             ));
             $messenger->send(NOTIFY_EMAIL);
-            //
 
             meta_refresh(3, append_sid("{$phpbb_root_path}tickets.$phpEx", 'action=view&amp;tid='.$tid));
             $message = $user->lang['TICKETS_SENDERS'] . '<br /><br />' . sprintf($user->lang['TICKETS_VIEW'], '<a href="' . $phpbb_root_path.'tickets.'.$phpEx.'?action=view&amp;tid='.$tid . '">', '</a>');
